@@ -14,9 +14,9 @@ function getDisplayName(componentClass) {
 
 module.exports = {
   spyOnRender(componentClass) {
-    REACT_LIFECYCLE_METHODS.forEach((methodName) => {
-      if(componentClass.prototype[methodName]) {
-        spyOn(componentClass.prototype, methodName)
+    REACT_LIFECYCLE_METHODS.forEach(methodName => {
+      if (componentClass.prototype[methodName]) {
+        spyOn(componentClass.prototype, methodName);
       }
     });
 
@@ -28,15 +28,12 @@ module.exports = {
         compare(actual, expected) {
           let result = {};
 
-          const propsByRender = actual.prototype.render.calls.all()
-            .map(({object: {props}}) => props);
+          const propsByRender = actual.prototype.render.calls
+            .all()
+            .map(({ object: { props } }) => props);
 
-          const matchingProps = propsByRender.find((props) => {
-            return util.equals(
-              props,
-              expected,
-              customEqualityTesters
-            );
+          const matchingProps = propsByRender.find(props => {
+            return util.equals(props, expected, customEqualityTesters);
           });
 
           const displayClass = getDisplayName(actual);
@@ -65,7 +62,7 @@ module.exports = {
 
           const displayClass = getDisplayName(actual);
 
-          if(mostRecentCall) {
+          if (mostRecentCall) {
             result.pass = true;
             result.message = `Expected ${displayClass} not to have been rendered`;
           } else {
@@ -75,7 +72,7 @@ module.exports = {
 
           return result;
         }
-      }
+      };
     }
   }
 };
