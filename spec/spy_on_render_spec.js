@@ -69,7 +69,7 @@ describe('spyOnRender', () => {
       spyOnRender(Component);
       ReactDOM.render(
         <div>
-          <Component className="smokey-dokey" />
+          <Component className="smokdey-dokey" />
           <Component className="hokey-pokey" />
         </div>,
         root

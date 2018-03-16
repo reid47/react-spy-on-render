@@ -1,3 +1,5 @@
+const { diffProps } = require('./diff_props');
+
 const REACT_LIFECYCLE_METHODS = [
   'componentWillMount',
   'componentDidMount',
@@ -24,6 +26,12 @@ module.exports = {
   },
   customMatchers: {
     toHaveBeenRenderedWithProps(util, customEqualityTesters) {
+      const equals = (a, b) => {
+        const diffBuilder = new jasmine.DiffBuilder();
+        const equal = util.equals(a, b, customEqualityTesters, diffBuilder);
+        return { equal, diffBuilder };
+      };
+
       return {
         compare(actual, expected) {
           let result = {};
@@ -44,9 +52,8 @@ module.exports = {
             result.message = `Expected ${displayClass} not to have been rendered with props ${displayExpected}`;
           } else {
             result.pass = false;
-            const displayActual = jasmine.pp(propsByRender);
-
-            result.message = `Expected ${displayClass} to have been rendered with props ${displayExpected}, but got ${displayActual}`;
+            console.log({ propsByRender });
+            result.message = diffProps(equals, expected, propsByRender);
           }
 
           return result;
