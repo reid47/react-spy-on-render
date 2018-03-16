@@ -2,7 +2,7 @@ const REACT_LIFECYCLE_METHODS = [
   'componentWillMount',
   'componentDidMount',
   'componentWillReceiveProps',
-  // 'shouldComponentUpdate',
+  'shouldComponentUpdate',
   'componentWillUpdate',
   'componentDidUpdate',
   'componentWillUnmount'

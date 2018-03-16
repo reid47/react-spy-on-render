@@ -5,7 +5,17 @@ describe('Helpers', () => {
   let Component;
 
   beforeEach(() => {
-    Component = createComponentClass();
+    Component = class Component extends React.Component {
+      componentDidMount() {
+        if (!this.theThing) {
+          throw new Error('should not call lifecycle methods');
+        }
+      }
+
+      render() {
+        return <h1 ref={el => (this.theThing = el)}>HOO BOY</h1>;
+      }
+    };
 
     spyOnRender(Component);
   });

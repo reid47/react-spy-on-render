@@ -28,152 +28,135 @@ describe('spyOnRender', () => {
     return { passed: expectationPassed, message: expectationMessage };
   }
 
-  function itDoesTheThing() {
-    it('sanity check', () => {
-      ReactDOM.render(<Component />, root);
+  beforeEach(() => {
+    Component = class Component extends React.Component {
+      componentDidMount() {
+        if (!this.theThing) {
+          throw new Error('should not call lifecycle methods');
+        }
+      }
 
+      render() {
+        return <h1 ref={el => (this.theThing = el)}>HOO BOY</h1>;
+      }
+    };
+  });
+
+  describe('spying and then rendering', () => {
+    beforeEach(() => {
+      spyOnRender(Component);
+      ReactDOM.render(<Component />, root);
+    });
+
+    it('renders nothing by default', () => {
+      expect('#root').not.toContainText('HOO BOY');
+    });
+  });
+
+  describe('spying with callThrough and then rendering', () => {
+    beforeEach(() => {
+      spyOnRender(Component).and.callThrough();
+      ReactDOM.render(<Component />, root);
+    });
+
+    it('renders the component children', () => {
       expect('#root').toContainText('HOO BOY');
     });
+  });
 
-    describe('spy', () => {
-      it('renders nothing by default', () => {
-        spyOnRender(Component);
+  describe('toHaveBeenRenderedWithProps', () => {
+    beforeEach(() => {
+      spyOnRender(Component);
+      ReactDOM.render(
+        <div>
+          <Component className="smokey-dokey" />
+          <Component className="hokey-pokey" />
+        </div>,
+        root
+      );
+    });
 
-        ReactDOM.render(<Component />, root);
-
-        expect('#root').not.toContainText('HOO BOY');
+    describe('positive matcher', () => {
+      it('matches props', () => {
+        expect(Component).toHaveBeenRenderedWithProps({
+          className: 'smokey-dokey'
+        });
       });
 
-      it('can still chain callThrough', () => {
-        spyOnRender(Component).and.callThrough();
+      it('errors helpfully when props do not match', () => {
+        const { passed, message } = getExpectationResult(expect => {
+          expect(Component).toHaveBeenRenderedWithProps({
+            className: 'smokey-tokey'
+          });
+        });
 
-        ReactDOM.render(<Component />, root);
-
-        expect('#root').toContainText('HOO BOY');
+        expect(passed).toEqual(false);
+        expect(message).toMatch(
+          /Expected Component to have been rendered with/
+        );
+        expect(message).toMatch(/but got/);
       });
     });
 
-    describe('toHaveBeenRenderedWithProps', () => {
-      beforeEach(() => {
-        spyOnRender(Component);
-        ReactDOM.render(
-          <div>
-            <Component className="smokey-dokey" />
-            <Component className="hokey-pokey" />
-          </div>,
-          root
-        );
+    describe('negative matcher', () => {
+      it('can match negative', () => {
+        expect(Component).not.toHaveBeenRenderedWithProps({
+          className: 'stay-wokey'
+        });
       });
 
-      describe('positive matcher', () => {
-        it('matches props', () => {
-          expect(Component).toHaveBeenRenderedWithProps({
+      it('errors helpfully when props match', () => {
+        const { passed, message } = getExpectationResult(expect => {
+          expect(Component).not.toHaveBeenRenderedWithProps({
             className: 'smokey-dokey'
           });
         });
 
-        it('errors helpfully when props do not match', () => {
-          const { passed, message } = getExpectationResult(expect => {
-            expect(Component).toHaveBeenRenderedWithProps({
-              className: 'smokey-tokey'
-            });
-          });
-
-          expect(passed).toEqual(false);
-          expect(message).toMatch(
-            /Expected Component to have been rendered with/
-          );
-          expect(message).toMatch(/but got/);
-        });
-      });
-
-      describe('negative matcher', () => {
-        it('can match negative', () => {
-          expect(Component).not.toHaveBeenRenderedWithProps({
-            className: 'stay-wokey'
-          });
-        });
-
-        it('errors helpfully when props match', () => {
-          const { passed, message } = getExpectationResult(expect => {
-            expect(Component).not.toHaveBeenRenderedWithProps({
-              className: 'smokey-dokey'
-            });
-          });
-
-          expect(passed).toEqual(false);
-          expect(message).toMatch(
-            /Expected Component not to have been rendered with/
-          );
-        });
+        expect(passed).toEqual(false);
+        expect(message).toMatch(
+          /Expected Component not to have been rendered with/
+        );
       });
     });
+  });
 
-    describe('toHaveBeenRendered', () => {
-      beforeEach(() => {
-        spyOnRender(Component);
+  describe('toHaveBeenRendered', () => {
+    beforeEach(() => {
+      spyOnRender(Component);
+    });
+
+    describe('positive matcher', () => {
+      it('passes if component was rendered', () => {
+        ReactDOM.render(<Component />, root);
+
+        expect(Component).toHaveBeenRendered();
       });
 
-      describe('positive matcher', () => {
-        it('passes if component was rendered', () => {
-          ReactDOM.render(<Component />, root);
-
+      it('errors helpfully if component was not rendered', () => {
+        const { passed, message } = getExpectationResult(expect => {
           expect(Component).toHaveBeenRendered();
         });
 
-        it('errors helpfully if component was not rendered', () => {
-          const { passed, message } = getExpectationResult(expect => {
-            expect(Component).toHaveBeenRendered();
-          });
+        expect(passed).toEqual(false);
+        expect(message).toMatch(/Expected Component to have been rendered/);
+      });
+    });
 
-          expect(passed).toEqual(false);
-          expect(message).toMatch(/Expected Component to have been rendered/);
-        });
+    describe('negative matcher', () => {
+      it('passes if component was not rendered', () => {
+        expect(Component).not.toHaveBeenRendered();
       });
 
-      describe('negative matcher', () => {
-        it('passes if component was not rendered', () => {
+      it('errors helpfully if component was rendered', () => {
+        ReactDOM.render(<Component />, root);
+
+        const { passed, message } = getExpectationResult(expect => {
           expect(Component).not.toHaveBeenRendered();
         });
 
-        it('errors helpfully if component was rendered', () => {
-          ReactDOM.render(<Component />, root);
-
-          const { passed, message } = getExpectationResult(expect => {
-            expect(Component).not.toHaveBeenRendered();
-          });
-
-          expect(passed).toEqual(false);
-          expect(message).toMatch(
-            /Expected Component not to have been rendered/
-          );
-        });
+        expect(passed).toEqual(false);
+        expect(message).toMatch(/Expected Component not to have been rendered/);
       });
     });
-  }
-
-  describe('with React.createClass', () => {
-    beforeEach(() => {
-      Component = React.createClass({
-        componentDidMount() {
-          if (!this.refs.theThing) {
-            throw new Error('should not call lifecycle methods');
-          }
-        },
-        render() {
-          return <h1 ref="theThing">HOO BOY</h1>;
-        }
-      });
-    });
-
-    itDoesTheThing();
-  });
-
-  describe('with class extends', () => {
-    beforeEach(() => {
-      Component = createComponentClass();
-    });
-
-    itDoesTheThing();
   });
 });
