@@ -1,7 +1,7 @@
 {
   "name": "react-spy-on-render",
   "version": "0.1.0",
-  "description": "stub react render in jasmine",
+  "description": "Spy on rendering of React components with Jasmine",
   "main": "index.js",
   "scripts": {
     "test": "gulp"
@@ -36,8 +36,8 @@
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-polyfill-find": "0.0.1",
     "phantomjs-prebuilt": "^2.1.13",
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "run-sequence": "^1.1.5",
     "webpack-stream": "^3.2.0"
   }
