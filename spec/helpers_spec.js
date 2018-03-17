@@ -56,4 +56,24 @@ describe('Helpers', () => {
       expect(propsOnRenderAt(Component, 1)).toEqual(propsOnSecondRender);
     });
   });
+
+  describe('resetRenders', () => {
+    const propsOnFirstRender = { foo: 'bar' };
+    const propsOnSecondRender = { foo: 'baz' };
+
+    beforeEach(() => {
+      ReactDOM.render(
+        <div>
+          <Component {...propsOnFirstRender} />
+          <Component {...propsOnSecondRender} />
+        </div>,
+        root
+      );
+      resetRenders(Component);
+    });
+
+    it('resets all tracked renders', () => {
+      expect(Component.prototype.render.calls.all()).toEqual([]);
+    });
+  });
 });

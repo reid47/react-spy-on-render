@@ -57,13 +57,19 @@ expect(Component).toHaveBeenRenderedWithProps({
 
 ### Helpers
 
-what props were rendered last?
+Reset all tracked renders on a component:
+
+```js
+resetRenders(Component);
+```
+
+What props were rendered last?
 
 ```js
 propsOnLastRender(Component);
 ```
 
-what props were rendered at some other point in time?
+What props were rendered at some other point in time?
 
 ```js
 propsOnRenderAt(Component, i);

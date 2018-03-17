@@ -4,5 +4,8 @@ module.exports = {
   },
   propsOnRenderAt(componentClass, i) {
     return componentClass.prototype.render.calls.all()[i].object.props;
+  },
+  resetRenders(componentClass) {
+    componentClass.prototype.render.calls.reset();
   }
 };
