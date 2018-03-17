@@ -70,6 +70,28 @@ module.exports = {
     toHaveBeenRenderedLastWithProps: createMatcher(actual => [
       actual.prototype.render.calls.mostRecent().object.props
     ]),
+    toHaveBeenRenderedTimes() {
+      return {
+        compare(actual, expectedTimes) {
+          const displayClass = getDisplayName(actual);
+
+          const actualTimes = actual.prototype.render.calls.count();
+          if (actualTimes === expectedTimes) {
+            return {
+              pass: true,
+              message: `Expected ${displayClass} NOT to have been rendered ${actualTimes} times.`
+            };
+          }
+
+          return {
+            pass: false,
+            message:
+              `Expected ${displayClass} to have been rendered ${expectedTimes} times, ` +
+              `but it was rendered ${actualTimes} times.`
+          };
+        }
+      };
+    },
     toHaveBeenRendered(util, customEqualityTesters) {
       const equals = (a, b) => {
         const diffBuilder = new jasmine.DiffBuilder();

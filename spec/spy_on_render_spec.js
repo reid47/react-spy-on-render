@@ -189,4 +189,52 @@ describe('spyOnRender', () => {
       });
     });
   });
+
+  describe('toHaveBeenRenderedTimes', () => {
+    beforeEach(() => {
+      spyOnRender(Component);
+      ReactDOM.render(
+        <div>
+          <Component />
+          <Component />
+        </div>,
+        root
+      );
+      ReactDOM.render(<Component />, root);
+    });
+
+    describe('positive matcher', () => {
+      it('passes if component was rendered 3 times', () => {
+        expect(Component).toHaveBeenRenderedTimes(3);
+      });
+
+      it('errors helpfully if component was not rendered', () => {
+        const { passed, message } = getExpectationResult(expect => {
+          expect(Component).toHaveBeenRenderedTimes(2);
+        });
+
+        expect(passed).toEqual(false);
+        expect(message).toMatch(
+          /Expected Component to have been rendered 2 times, but it was rendered 3 times./
+        );
+      });
+    });
+
+    describe('negative matcher', () => {
+      it('passes if component was not rendered 3 times', () => {
+        expect(Component).not.toHaveBeenRenderedTimes(2);
+      });
+
+      it('errors helpfully if component was rendered', () => {
+        const { passed, message } = getExpectationResult(expect => {
+          expect(Component).not.toHaveBeenRenderedTimes(3);
+        });
+
+        expect(passed).toEqual(false);
+        expect(message).toMatch(
+          /Expected Component NOT to have been rendered 3 times./
+        );
+      });
+    });
+  });
 });
