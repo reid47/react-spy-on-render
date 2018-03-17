@@ -47,20 +47,17 @@ gulp.task('build-js', function() {
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }
           ]
         },
-        output: { filename: 'index.js' }
+        output: { filename: 'index.js' },
+        externals: {
+          react: 'react'
+        }
       })
     )
     .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('copy-files', function() {
-  return gulp
-    .src(['package.json', 'README.md'], { base: '.' })
-    .pipe(gulp.dest('dist'));
-});
-
 gulp.task('build', ['clean-dist'], function(done) {
-  runSequence(['build-js', 'copy-files'], done);
+  runSequence(['build-js'], done);
 });
 
 gulp.task('default', ['build']);
