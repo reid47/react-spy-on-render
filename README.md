@@ -6,7 +6,7 @@ Spy on React components in Jasmine tests.
 
 ## Installation
 
-```
+```sh
 yarn add -D react-spy-on-render
 # or
 npm install react-spy-on-render --save-dev
@@ -14,9 +14,9 @@ npm install react-spy-on-render --save-dev
 
 Put this in your `spec_helper.js`:
 
-```
+```js
 import 'react-spy-on-render';
-# or
+// or
 require('react-spy-on-render');
 ```
 
