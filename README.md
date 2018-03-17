@@ -40,19 +40,34 @@ spyOnRender(Component).and.callThrough();
 
 ### Matchers
 
-was the component rendered?
+Was the component rendered?
 
 ```js
 expect(Component).toHaveBeenRendered();
 ```
 
-with specific properties?
+Was the component rendered _at any point_ with specific props?
 
 ```js
 expect(Component).toHaveBeenRenderedWithProps({
-  className: 'whatever',
-  otherProp: 'whocares'
+  className: 'some-class',
+  otherProp: 47
 });
+```
+
+Was the component _last_ rendered with specific props?
+
+```js
+expect(Component).toHaveBeenRenderedLastWithProps({
+  className: 'some-class',
+  otherProp: 47
+});
+```
+
+Was the component rendered a specific number of times?
+
+```js
+expect(Component).toHaveBeenRenderedTimes(4);
 ```
 
 ### Helpers
@@ -77,4 +92,4 @@ propsOnRenderAt(Component, i);
 
 ## Acknowledgements
 
-This project is based on code from [this project](https://github.com/atomanyih/spy-on-render).
+This project drew a lot of inspiration and much of its code from [this great project](https://github.com/atomanyih/spy-on-render).
