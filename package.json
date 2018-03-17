@@ -17,7 +17,10 @@
   "bugs": {
     "url": "https://github.com/reid47/react-spy-on-render/issues"
   },
-  "keywords": ["jasmine", "react"],
+  "keywords": [
+    "jasmine",
+    "react"
+  ],
   "homepage": "https://github.com/reid47/react-spy-on-render#readme",
   "devDependencies": {
     "babel": "^6.3.26",
@@ -30,12 +33,13 @@
     "babel-preset-stage-0": "^6.3.13",
     "del": "^2.2.0",
     "gulp": "^3.9.0",
-    "gulp-jasmine-browser": "^1.0.0",
-    "gulp-load-plugins": "^1.2.0",
-    "gulp-plumber": "^1.0.1",
+    "gulp-jasmine-browser": "2.0.0",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-plumber": "^1.2.0",
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-polyfill-find": "0.0.1",
     "phantomjs-prebuilt": "^2.1.13",
+    "puppeteer": "^1.2.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "run-sequence": "^1.1.5",
