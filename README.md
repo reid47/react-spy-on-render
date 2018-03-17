@@ -75,6 +75,6 @@ What props were rendered at some other point in time?
 propsOnRenderAt(Component, i);
 ```
 
-### Acknowledgements
+## Acknowledgements
 
 This project is based on code from [this project](https://github.com/atomanyih/spy-on-render).

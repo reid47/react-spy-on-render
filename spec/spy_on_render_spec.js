@@ -121,6 +121,31 @@ describe('spyOnRender', () => {
     });
   });
 
+  describe('toHaveBeenRenderedLastWithProps', () => {
+    beforeEach(() => {
+      spyOnRender(Component);
+      ReactDOM.render(
+        <div>
+          <Component className="smokey-dokey" />
+          <Component className="hokey-pokey" />
+        </div>,
+        root
+      );
+    });
+
+    it('matches the last rendered props', () => {
+      expect(Component).toHaveBeenRenderedLastWithProps({
+        className: 'hokey-pokey'
+      });
+    });
+
+    it('does not match previous props', () => {
+      expect(Component).not.toHaveBeenRenderedLastWithProps({
+        className: 'smokey-dokey'
+      });
+    });
+  });
+
   describe('toHaveBeenRendered', () => {
     beforeEach(() => {
       spyOnRender(Component);

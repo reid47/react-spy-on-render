@@ -15,6 +15,44 @@ function getDisplayName(componentClass) {
   return componentClass.displayName || componentClass.name;
 }
 
+const createMatcher = getPropsByRender => {
+  return (util, customEqualityTesters) => {
+    const equals = (a, b) => {
+      const diffBuilder = new jasmine.DiffBuilder();
+      const equal = util.equals(a, b, customEqualityTesters, diffBuilder);
+      return { equal, diffBuilder };
+    };
+
+    return {
+      compare(actual, expected) {
+        const displayClass = getDisplayName(actual);
+
+        const propsByRender = getPropsByRender(actual);
+
+        const matchingProps = propsByRender.filter(props => {
+          return util.equals(props, expected, customEqualityTesters);
+        });
+
+        if (matchingProps.length) {
+          return {
+            pass: true,
+            message:
+              `Expected ${displayClass} NOT to have been rendered with props:\n\n` +
+              diffProps(equals, {}, matchingProps, true)
+          };
+        }
+
+        return {
+          pass: false,
+          message:
+            `Expected ${displayClass} to have been rendered with props:\n\n` +
+            diffProps(equals, expected, propsByRender)
+        };
+      }
+    };
+  };
+};
+
 module.exports = {
   spyOnRender(componentClass) {
     REACT_LIFECYCLE_METHODS.forEach(methodName => {
@@ -26,43 +64,12 @@ module.exports = {
     return spyOn(componentClass.prototype, 'render').and.returnValue(null);
   },
   customMatchers: {
-    toHaveBeenRenderedWithProps(util, customEqualityTesters) {
-      const equals = (a, b) => {
-        const diffBuilder = new jasmine.DiffBuilder();
-        const equal = util.equals(a, b, customEqualityTesters, diffBuilder);
-        return { equal, diffBuilder };
-      };
-
-      return {
-        compare(actual, expected) {
-          const displayClass = getDisplayName(actual);
-
-          const propsByRender = actual.prototype.render.calls
-            .all()
-            .map(({ object: { props } }) => props);
-
-          const matchingProps = propsByRender.filter(props => {
-            return util.equals(props, expected, customEqualityTesters);
-          });
-
-          if (matchingProps.length) {
-            return {
-              pass: true,
-              message:
-                `Expected ${displayClass} NOT to have been rendered with props:\n\n` +
-                diffProps(equals, {}, matchingProps, true)
-            };
-          }
-
-          return {
-            pass: false,
-            message:
-              `Expected ${displayClass} to have been rendered with props:\n\n` +
-              diffProps(equals, expected, propsByRender)
-          };
-        }
-      };
-    },
+    toHaveBeenRenderedWithProps: createMatcher(actual =>
+      actual.prototype.render.calls.all().map(({ object: { props } }) => props)
+    ),
+    toHaveBeenRenderedLastWithProps: createMatcher(actual => [
+      actual.prototype.render.calls.mostRecent().object.props
+    ]),
     toHaveBeenRendered(util, customEqualityTesters) {
       const equals = (a, b) => {
         const diffBuilder = new jasmine.DiffBuilder();
