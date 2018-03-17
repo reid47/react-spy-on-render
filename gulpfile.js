@@ -2,7 +2,6 @@ require('babel-polyfill');
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var webpack = require('webpack-stream');
-var runSequence = require('run-sequence');
 
 function testAssetsStream(watch) {
   return gulp
