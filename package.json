@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "gulp spec",
-    "build": "gulp build",
+    "build": "rimraf dist && babel src -d dist",
     "prepack": "npm run build"
   },
   "repository": {
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/reid47/react-spy-on-render#readme",
   "devDependencies": {
     "babel": "^6.3.26",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.4.0",
     "babel-loader": "^6.2.1",
     "babel-plugin-transform-object-assign": "^6.3.13",
@@ -28,13 +29,13 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
-    "del": "^2.2.0",
     "gulp": "^3.9.0",
     "gulp-jasmine-browser": "2.0.0",
     "gulp-load-plugins": "^1.5.0",
     "gulp-plumber": "^1.2.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "rimraf": "^2.6.2",
     "run-sequence": "^1.1.5",
     "webpack-stream": "^3.2.0"
   },

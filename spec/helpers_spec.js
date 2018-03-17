@@ -1,5 +1,5 @@
 require('./spec_helper');
-require('../index');
+require('../src/index');
 const React = require('react');
 const ReactDOM = require('react-dom');
 
