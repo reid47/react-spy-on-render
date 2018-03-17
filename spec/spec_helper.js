@@ -1,6 +1,4 @@
 require('babel-polyfill');
-const React = require('react');
-const ReactDOM = require('react-dom');
 
 beforeEach(() => {
   const root = document.getElementById('root');
