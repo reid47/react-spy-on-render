@@ -69,7 +69,7 @@ describe('spyOnRender', () => {
       spyOnRender(Component);
       ReactDOM.render(
         <div>
-          <Component className="smokdey-dokey" />
+          <Component className="smokey-dokey" />
           <Component className="hokey-pokey" />
         </div>,
         root
@@ -92,9 +92,8 @@ describe('spyOnRender', () => {
 
         expect(passed).toEqual(false);
         expect(message).toMatch(
-          /Expected Component to have been rendered with/
+          /Expected Component to have been rendered with props as shown:/
         );
-        expect(message).toMatch(/but got/);
       });
     });
 
@@ -114,7 +113,7 @@ describe('spyOnRender', () => {
 
         expect(passed).toEqual(false);
         expect(message).toMatch(
-          /Expected Component not to have been rendered with/
+          /Expected Component not to have been rendered with props as shown:/
         );
       });
     });

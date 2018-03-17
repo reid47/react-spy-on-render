@@ -50,15 +50,15 @@ describe('diffProps', () => {
     it('returns a message listing the unprovided props', () => {
       expect(result).toEqual(
         [
-          'render 0:',
+          'on render 1 (most recent):',
           '',
           '  notGivenProp:',
-          "        expected: 'test'",
           '          actual: (prop not given)',
+          "        expected: 'test'",
           '',
           '  otherNotGivenProp:',
-          '        expected: 47',
-          '          actual: (prop not given)'
+          '          actual: (prop not given)',
+          '        expected: 47'
         ].join('\n')
       );
     });
@@ -84,15 +84,15 @@ describe('diffProps', () => {
     it('returns a message listing the unprovided props', () => {
       expect(result).toEqual(
         [
-          'render 0:',
+          'on render 1 (most recent):',
           '',
           '  extraProp:',
-          '        expected: (prop not given)',
           "          actual: 'test'",
+          '        expected: (prop not given)',
           '',
           '  otherExtraProp:',
-          '        expected: (prop not given)',
-          '          actual: 47'
+          '          actual: 47',
+          '        expected: (prop not given)'
         ].join('\n')
       );
     });
@@ -134,31 +134,31 @@ describe('diffProps', () => {
     it('returns a helpful message', () => {
       expect(result).toBe(
         [
-          'render 0:',
+          'on render 1 (most recent):',
           '',
           '  boolPropDiff:',
-          '        expected: false',
           '          actual: true',
+          '        expected: false',
           '            diff: Expected true to equal false.',
           '',
           '  nullPropDiff:',
-          '        expected: null',
           '          actual: undefined',
+          '        expected: null',
           '            diff: Expected undefined to equal null.',
           '',
           '  numPropDiff:',
-          '        expected: 48',
           '          actual: 47',
+          '        expected: 48',
           '            diff: Expected 47 to equal 48.',
           '',
           '  stringPropDiff:',
-          "        expected: 'hello'",
           "          actual: 'world'",
+          "        expected: 'hello'",
           "            diff: Expected 'world' to equal 'hello'.",
           '',
           '  undefPropDiff:',
-          '        expected: undefined',
           '          actual: null',
+          '        expected: undefined',
           '            diff: Expected null to equal undefined.'
         ].join('\n')
       );
@@ -183,11 +183,11 @@ describe('diffProps', () => {
     it('returns a helpful message', () => {
       expect(result).toBe(
         [
-          'render 0:',
+          'on render 1 (most recent):',
           '',
           '  arrayProp:',
-          "        expected: [1, 2, 'test']",
           "          actual: [1, 2, 'test', 4]",
+          "        expected: [1, 2, 'test']",
           '            diff: Expected $.length = 4 to equal 3.',
           '                  Expected $[3] = 4 to equal undefined.'
         ].join('\n')
@@ -213,11 +213,11 @@ describe('diffProps', () => {
     it('returns a helpful message', () => {
       expect(result).toBe(
         [
-          'render 0:',
+          'on render 1 (most recent):',
           '',
           '  objProp:',
-          '        expected: {"a":1,"b":"test","c":{"d":true,"e":8}}',
           '          actual: {"a":1,"b":"test","c":{"d":false,"e":9}}',
+          '        expected: {"a":1,"b":"test","c":{"d":true,"e":8}}',
           '            diff: Expected $.c.d = false to equal true.',
           '                  Expected $.c.e = 9 to equal 8.'
         ].join('\n')
@@ -251,14 +251,14 @@ describe('diffProps', () => {
     it('returns a helpful message', () => {
       expect(result).toBe(
         [
-          'render 0:',
+          'on render 1 (most recent):',
           '',
           '  funcProp2:',
-          '        expected: function func2() {',
-          '                          return null;',
-          '                        }',
           '          actual: function func3() {',
           "                          return console.log('nice');",
+          '                        }',
+          '        expected: function func2() {',
+          '                          return null;',
           '                        }',
           '            diff: Expected Function to equal Function.'
         ].join('\n')
@@ -288,20 +288,20 @@ describe('diffProps', () => {
     it('returns a helpful message', () => {
       expect(result).toBe(
         [
-          'render 0:',
+          'on render 1 (most recent):',
           '',
           '  jsxPropDiff1:',
-          '        expected: <span className="two A">',
+          '          actual: <span className="two B">',
           '                    test',
           '                  </span>',
-          '          actual: <span className="two B">',
+          '        expected: <span className="two A">',
           '                    test',
           '                  </span>',
           "            diff: Expected $.props.className = 'two B' to equal 'two A'.",
           '',
           '  jsxPropDiff2:',
-          '        expected: <button onClick={<Function>} />',
           '          actual: <button onClick={<Function>} />',
+          '        expected: <button onClick={<Function>} />',
           '            diff: Expected $.props.onClick = Function to equal Function.'
         ].join('\n')
       );
@@ -332,30 +332,30 @@ describe('diffProps', () => {
     it('shows results for all renders', () => {
       expect(result).toEqual(
         [
-          'render 0:',
+          'on render 3 (most recent):',
           '',
           '  someProp:',
+          "          actual: 'test3'",
           "        expected: 'test'",
-          "          actual: 'test1'",
-          "            diff: Expected 'test1' to equal 'test'.",
+          "            diff: Expected 'test3' to equal 'test'.",
           '',
           '========',
           '',
-          'render 1:',
+          'on render 2:',
           '',
           '  someProp:',
-          "        expected: 'test'",
           "          actual: 'test2'",
+          "        expected: 'test'",
           "            diff: Expected 'test2' to equal 'test'.",
           '',
           '========',
           '',
-          'render 2:',
+          'on render 1:',
           '',
           '  someProp:',
+          "          actual: 'test1'",
           "        expected: 'test'",
-          "          actual: 'test3'",
-          "            diff: Expected 'test3' to equal 'test'."
+          "            diff: Expected 'test1' to equal 'test'."
         ].join('\n')
       );
     });

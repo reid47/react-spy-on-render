@@ -7,7 +7,8 @@ const REACT_LIFECYCLE_METHODS = [
   'shouldComponentUpdate',
   'componentWillUpdate',
   'componentDidUpdate',
-  'componentWillUnmount'
+  'componentWillUnmount',
+  'componentDidCatch'
 ];
 
 function getDisplayName(componentClass) {
@@ -34,7 +35,7 @@ module.exports = {
 
       return {
         compare(actual, expected) {
-          let result = {};
+          const result = {};
 
           const propsByRender = actual.prototype.render.calls
             .all()
@@ -49,11 +50,14 @@ module.exports = {
 
           if (matchingProps) {
             result.pass = true;
-            result.message = `Expected ${displayClass} not to have been rendered with props ${displayExpected}`;
+            result.message =
+              `Expected ${displayClass} not to have been rendered with props as shown:\n\n` +
+              diffProps(equals, expected, propsByRender);
           } else {
             result.pass = false;
-            console.log({ propsByRender });
-            result.message = diffProps(equals, expected, propsByRender);
+            result.message =
+              `Expected ${displayClass} to have been rendered with props as shown:\n\n` +
+              diffProps(equals, expected, propsByRender);
           }
 
           return result;

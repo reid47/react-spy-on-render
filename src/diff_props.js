@@ -11,7 +11,6 @@ const indentAllButFirstLine = str =>
 const formatValue = value => {
   if (typeof value === 'string') return `'${value}'`;
 
-  console.log(`${value}`);
   if (typeof value !== 'object' || value == null)
     return indentAllButFirstLine(`${value}`);
 
@@ -45,15 +44,15 @@ const formatActualExpected = (prop, actual, expected, diff = '') => {
   diff = diff.split(/\n[ \t]*/).join('\n                  ');
   return [
     `  ${prop}:`,
-    `        expected: ${expected}`,
     `          actual: ${actual}`,
+    `        expected: ${expected}`,
     diff && `            diff: ${diff}`
   ]
     .filter(i => i)
     .join('\n');
 };
 
-const compare = (equals, index, expected, actual) => {
+const compare = (equals, index, isMostRecent, expected, actual) => {
   const details = Object.keys({ ...expected, ...actual })
     .sort()
     .map(prop => {
@@ -81,11 +80,16 @@ const compare = (equals, index, expected, actual) => {
     .filter(i => i)
     .join('\n\n');
 
-  return details ? `render ${index}:\n\n${details}` : '';
+  return details
+    ? `on render ${index}${isMostRecent ? ' (most recent)' : ''}:\n\n${details}`
+    : '';
 };
 
 export const diffProps = (equals, expected, propsByRender) => {
   return propsByRender
-    .map((actual, i) => compare(equals, i, expected, actual))
+    .reverse()
+    .map((actual, i) =>
+      compare(equals, propsByRender.length - i, i === 0, expected, actual)
+    )
     .join('\n\n========\n\n');
 };
