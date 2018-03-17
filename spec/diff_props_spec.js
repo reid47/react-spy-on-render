@@ -1,4 +1,6 @@
 require('./spec_helper');
+const React = require('react');
+const ReactDOM = require('react-dom');
 const { diffProps } = require('../src/diff_props');
 
 const equals = (a, b) => {

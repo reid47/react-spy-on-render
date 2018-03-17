@@ -1,16 +1,13 @@
 require('babel-polyfill');
-
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var webpack = require('webpack-stream');
 var del = require('del');
 var runSequence = require('run-sequence');
 
-gulp.task('default', ['ci']);
-
 function testAssetsStream(watch) {
   return gulp
-    .src(['spec/**/*_spec.js'])
+    .src(['src/**/*.js', 'spec/**/*_spec.js'])
     .pipe(plugins.plumber())
     .pipe(
       webpack({
@@ -31,12 +28,6 @@ gulp.task('spec', function() {
   return testAssetsStream(true)
     .pipe(plugins.jasmineBrowser.specRunner())
     .pipe(plugins.jasmineBrowser.server({ whenReady: plugins.whenReady }));
-});
-
-gulp.task('ci', function() {
-  return testAssetsStream(false)
-    .pipe(plugins.jasmineBrowser.specRunner({ console: true }))
-    .pipe(plugins.jasmineBrowser.headless({ driver: 'chrome' }));
 });
 
 gulp.task('clean-dist', function(done) {
@@ -71,3 +62,5 @@ gulp.task('copy-files', function() {
 gulp.task('build', ['clean-dist'], function(done) {
   runSequence(['build-js', 'copy-files'], done);
 });
+
+gulp.task('default', ['build']);

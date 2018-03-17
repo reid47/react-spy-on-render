@@ -1,5 +1,7 @@
 require('./spec_helper');
 require('../index');
+const React = require('react');
+const ReactDOM = require('react-dom');
 
 describe('spyOnRender', () => {
   let Component;

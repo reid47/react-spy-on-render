@@ -1,13 +1,6 @@
-require('phantomjs-polyfill');
-require('phantomjs-polyfill-find');
 require('babel-polyfill');
 const React = require('react');
 const ReactDOM = require('react-dom');
-
-Object.assign(global, {
-  React,
-  ReactDOM
-});
 
 beforeEach(() => {
   const root = document.getElementById('root');
