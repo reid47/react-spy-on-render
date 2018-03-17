@@ -119,6 +119,35 @@ describe('spyOnRender', () => {
         expect(message).toMatch(/actual: 'smokey-dokey'/);
       });
     });
+
+    describe('when never rendered', () => {
+      beforeEach(() => {
+        Component.prototype.render.calls.reset();
+      });
+
+      it('is helpful when matching positively', () => {
+        const { passed, message } = getExpectationResult(expect => {
+          expect(Component).toHaveBeenRenderedWithProps({
+            hello: 'world'
+          });
+        });
+
+        expect(passed).toEqual(false);
+        expect(message).toMatch(
+          /Expected Component to have been rendered with props, but it was never rendered./
+        );
+      });
+
+      it('passes when matching negatively', () => {
+        const { passed, message } = getExpectationResult(expect => {
+          expect(Component).not.toHaveBeenRenderedWithProps({
+            hello: 'world'
+          });
+        });
+
+        expect(passed).toEqual(true);
+      });
+    });
   });
 
   describe('toHaveBeenRenderedLastWithProps', () => {

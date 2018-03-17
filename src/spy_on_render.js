@@ -25,29 +25,32 @@ const createMatcher = getPropsByRender => {
 
     return {
       compare(actual, expected) {
+        let pass, message;
+
         const displayClass = getDisplayName(actual);
-
         const propsByRender = getPropsByRender(actual);
-
         const matchingProps = propsByRender.filter(props => {
           return util.equals(props, expected, customEqualityTesters);
         });
 
         if (matchingProps.length) {
-          return {
-            pass: true,
-            message:
-              `Expected ${displayClass} NOT to have been rendered with props:\n\n` +
-              diffProps(equals, {}, matchingProps, true)
-          };
+          pass = true;
+          message =
+            `Expected ${displayClass} NOT to have been rendered with props:\n\n` +
+            diffProps(equals, {}, matchingProps, true);
+        } else if (propsByRender.length === 0) {
+          pass = false;
+          message =
+            `Expected ${displayClass} to have been rendered with props, ` +
+            `but it was never rendered.`;
+        } else {
+          pass = false;
+          message =
+            `Expected ${displayClass} to have been rendered with props:\n\n` +
+            diffProps(equals, expected, propsByRender);
         }
 
-        return {
-          pass: false,
-          message:
-            `Expected ${displayClass} to have been rendered with props:\n\n` +
-            diffProps(equals, expected, propsByRender)
-        };
+        return { pass, message };
       }
     };
   };
