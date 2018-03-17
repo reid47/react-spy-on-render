@@ -225,6 +225,42 @@ describe('diffProps', () => {
     });
   });
 
+  fdescribe('when circular object props are different', () => {
+    beforeEach(() => {
+      const circularA = {};
+      circularA.self = circularA;
+
+      const circularB = { 1: 2 };
+      circularB.self = circularB;
+
+      expected = {
+        circularProp: circularA
+      };
+
+      actual = [
+        {
+          circularProp: circularB
+        }
+      ];
+
+      result = diffProps(equals, expected, actual);
+    });
+
+    it('returns a helpful message', () => {
+      expect(result).toBe(
+        [
+          'on render 1 (most recent):',
+          '',
+          '  circularProp:',
+          '      actual: <circular object>',
+          '    expected: <circular object>',
+          '        diff: Expected object not to have properties',
+          '                  1: 2'
+        ].join('\n')
+      );
+    });
+  });
+
   describe('when function props are different', () => {
     let func1, func2, func3;
 

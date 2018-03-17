@@ -23,7 +23,15 @@ const formatValue = value => {
       })
     );
 
-  return JSON.stringify(value);
+  try {
+    return JSON.stringify(value);
+  } catch (err) {
+    if (/circular structure/.test(err.message)) {
+      return '<circular object>';
+    }
+
+    throw err;
+  }
 };
 
 const formatMissingProp = (prop, expectedValue) =>
