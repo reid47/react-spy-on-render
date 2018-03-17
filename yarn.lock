@@ -2577,14 +2577,6 @@ jasmine-terminal-reporter@^1.0.2:
     indent-string "^2.1.0"
     pluralize "^1.2.1"
 
-jasmine_dom_matchers@^1.1.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/jasmine_dom_matchers/-/jasmine_dom_matchers-1.4.0.tgz#77770373dc718900bbf47b47db707548d468d012"
-
-jquery@^3.1.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
-
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -3470,7 +3462,7 @@ react-element-to-jsx-string@^13.2.0:
     is-plain-object "2.0.4"
     stringify-object "3.2.2"
 
-"react@^0.14.8 || ^15.0.1 || ^16.0.0":
+react@^16.2.0:
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.2.0.tgz#a31bd2dab89bff65d42134fa187f24d054c273ba"
   dependencies:

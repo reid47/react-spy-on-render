@@ -47,7 +47,8 @@ describe('spyOnRender', () => {
     });
 
     it('renders nothing by default', () => {
-      expect('#root').not.toContainText('HOO BOY');
+      const el = document.getElementById('root');
+      expect(el.innerText).toBe('');
     });
   });
 
@@ -58,7 +59,8 @@ describe('spyOnRender', () => {
     });
 
     it('renders the component children', () => {
-      expect('#root').toContainText('HOO BOY');
+      const el = document.getElementById('root');
+      expect(el.innerText).toBe('HOO BOY');
     });
   });
 
