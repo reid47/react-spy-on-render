@@ -35,53 +35,62 @@ module.exports = {
 
       return {
         compare(actual, expected) {
-          const result = {};
+          const displayClass = getDisplayName(actual);
 
           const propsByRender = actual.prototype.render.calls
             .all()
             .map(({ object: { props } }) => props);
 
-          const matchingProps = propsByRender.find(props => {
+          const matchingProps = propsByRender.filter(props => {
             return util.equals(props, expected, customEqualityTesters);
           });
 
-          const displayClass = getDisplayName(actual);
-          const displayExpected = jasmine.pp(expected);
-
-          if (matchingProps) {
-            result.pass = true;
-            result.message =
-              `Expected ${displayClass} not to have been rendered with props as shown:\n\n` +
-              diffProps(equals, expected, propsByRender);
-          } else {
-            result.pass = false;
-            result.message =
-              `Expected ${displayClass} to have been rendered with props as shown:\n\n` +
-              diffProps(equals, expected, propsByRender);
+          if (matchingProps.length) {
+            return {
+              pass: true,
+              message:
+                `Expected ${displayClass} NOT to have been rendered with props:\n\n` +
+                diffProps(equals, {}, matchingProps, true)
+            };
           }
 
-          return result;
+          return {
+            pass: false,
+            message:
+              `Expected ${displayClass} to have been rendered with props:\n\n` +
+              diffProps(equals, expected, propsByRender)
+          };
         }
       };
     },
-    toHaveBeenRendered() {
+    toHaveBeenRendered(util, customEqualityTesters) {
+      const equals = (a, b) => {
+        const diffBuilder = new jasmine.DiffBuilder();
+        const equal = util.equals(a, b, customEqualityTesters, diffBuilder);
+        return { equal, diffBuilder };
+      };
+
       return {
         compare(actual) {
-          let result = {};
-
-          const mostRecentCall = actual.prototype.render.calls.mostRecent();
-
           const displayClass = getDisplayName(actual);
 
-          if (mostRecentCall) {
-            result.pass = true;
-            result.message = `Expected ${displayClass} not to have been rendered`;
-          } else {
-            result.pass = false;
-            result.message = `Expected ${displayClass} to have been rendered`;
+          const propsByRender = actual.prototype.render.calls
+            .all()
+            .map(({ object: { props } }) => props);
+
+          if (propsByRender.length) {
+            return {
+              pass: true,
+              message:
+                `Expected ${displayClass} NOT to have been rendered, but it was rendered with props:\n\n` +
+                diffProps(equals, {}, propsByRender, true)
+            };
           }
 
-          return result;
+          return {
+            pass: false,
+            message: `Expected ${displayClass} to have been rendered`
+          };
         }
       };
     }

@@ -23,8 +23,6 @@ describe('spyOnRender', () => {
 
     block(magicExpect);
 
-    console.log(expectationMessage);
-
     return { passed: expectationPassed, message: expectationMessage };
   }
 
@@ -92,8 +90,10 @@ describe('spyOnRender', () => {
 
         expect(passed).toEqual(false);
         expect(message).toMatch(
-          /Expected Component to have been rendered with props as shown:/
+          /Expected Component to have been rendered with props:/
         );
+        expect(message).toMatch(/className:/);
+        expect(message).toMatch(/actual: 'smokey-dokey'/);
       });
     });
 
@@ -113,8 +113,10 @@ describe('spyOnRender', () => {
 
         expect(passed).toEqual(false);
         expect(message).toMatch(
-          /Expected Component not to have been rendered with props as shown:/
+          /Expected Component NOT to have been rendered with props:/
         );
+        expect(message).toMatch(/className:/);
+        expect(message).toMatch(/actual: 'smokey-dokey'/);
       });
     });
   });
@@ -147,14 +149,18 @@ describe('spyOnRender', () => {
       });
 
       it('errors helpfully if component was rendered', () => {
-        ReactDOM.render(<Component />, root);
+        ReactDOM.render(<Component foo="bar" />, root);
 
         const { passed, message } = getExpectationResult(expect => {
           expect(Component).not.toHaveBeenRendered();
         });
 
         expect(passed).toEqual(false);
-        expect(message).toMatch(/Expected Component not to have been rendered/);
+        expect(message).toMatch(
+          /Expected Component NOT to have been rendered, but it was rendered with props:/
+        );
+        expect(message).toMatch(/foo:/);
+        expect(message).toMatch(/actual: 'bar'/);
       });
     });
   });

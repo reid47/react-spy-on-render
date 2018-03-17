@@ -27,10 +27,16 @@ const formatValue = value => {
 };
 
 const formatMissingProp = (prop, expectedValue) =>
-  formatActualExpected(prop, NOT_GIVEN, formatValue(expectedValue));
+  formatActualExpected(prop, NOT_GIVEN, formatValue(expectedValue), '');
 
-const formatUnexpectedProp = (prop, actualValue) =>
-  formatActualExpected(prop, formatValue(actualValue), NOT_GIVEN);
+const formatUnexpectedProp = (prop, actualValue, actualOnly) =>
+  formatActualExpected(
+    prop,
+    formatValue(actualValue),
+    NOT_GIVEN,
+    '',
+    actualOnly
+  );
 
 const formatMismatchedProp = (prop, actualValue, expectedValue, diff) =>
   formatActualExpected(
@@ -40,22 +46,26 @@ const formatMismatchedProp = (prop, actualValue, expectedValue, diff) =>
     diff
   );
 
-const formatActualExpected = (prop, actual, expected, diff = '') => {
+const formatActualExpected = (prop, actual, expected, diff, actualOnly) => {
   diff = diff.split(/\n[ \t]*/).join('\n                  ');
   return [
     `  ${prop}:`,
-    `          actual: ${actual}`,
-    `        expected: ${expected}`,
-    diff && `            diff: ${diff}`
+    `      actual: ${actual}`,
+    !actualOnly && `    expected: ${expected}`,
+    diff && `        diff: ${diff}`
   ]
     .filter(i => i)
     .join('\n');
 };
 
-const compare = (equals, index, isMostRecent, expected, actual) => {
+const compare = (equals, index, isMostRecent, actualOnly, expected, actual) => {
   const details = Object.keys({ ...expected, ...actual })
     .sort()
     .map(prop => {
+      if (actualOnly) {
+        return formatUnexpectedProp(prop, actual[prop], true);
+      }
+
       const inActual = actual.hasOwnProperty(prop);
       const inExpected = expected.hasOwnProperty(prop);
 
@@ -73,7 +83,7 @@ const compare = (equals, index, isMostRecent, expected, actual) => {
           prop,
           actual[prop],
           expected[prop],
-          diffBuilder.getMessage()
+          diffBuilder.getMessage() || ''
         );
       }
     })
@@ -85,11 +95,18 @@ const compare = (equals, index, isMostRecent, expected, actual) => {
     : '';
 };
 
-export const diffProps = (equals, expected, propsByRender) => {
+export const diffProps = (equals, expected, propsByRender, actualOnly) => {
   return propsByRender
     .reverse()
     .map((actual, i) =>
-      compare(equals, propsByRender.length - i, i === 0, expected, actual)
+      compare(
+        equals,
+        propsByRender.length - i,
+        i === 0,
+        actualOnly,
+        expected,
+        actual
+      )
     )
     .join('\n\n========\n\n');
 };
