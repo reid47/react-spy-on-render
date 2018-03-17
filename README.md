@@ -90,6 +90,12 @@ What props were rendered at some other point in time?
 propsOnRenderAt(Component, i);
 ```
 
+## Development
+
+Use `yarn test` to start up a local Jasmine to run the tests in a browser. It watches your files for changes and automatically recompiles them with Webpack.
+
+Use `yarn build` to transpile the source into the `dist` folder (in preparation for publishing on NPM).
+
 ## Acknowledgements
 
 This project drew a lot of inspiration and much of its code from [this great project](https://github.com/atomanyih/spy-on-render).
