@@ -85,6 +85,12 @@ describe('spyOnRender', () => {
         });
       });
 
+      it('matches props with special matchers', () => {
+        expect(Component).toHaveBeenRenderedWithProps({
+          className: jasmine.any(String)
+        });
+      });
+
       it('errors helpfully when props do not match', () => {
         const { passed, message } = getExpectationResult(expect => {
           expect(Component).toHaveBeenRenderedWithProps({
