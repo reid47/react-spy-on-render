@@ -5,7 +5,7 @@ const NOT_GIVEN = '(prop not given)';
 const indentAllButFirstLine = str =>
   str
     .split('\n')
-    .map((s, i) => (i === 0 ? s : `                  ${s}`))
+    .map((s, i) => (i === 0 ? s : `              ${s}`))
     .join('\n');
 
 const formatValue = value => {
@@ -55,12 +55,11 @@ const formatMismatchedProp = (prop, actualValue, expectedValue, diff) =>
   );
 
 const formatActualExpected = (prop, actual, expected, diff, actualOnly) => {
-  diff = diff.split(/\n[ \t]*/).join('\n                  ');
   return [
     `  ${prop}:`,
     `      actual: ${actual}`,
     !actualOnly && `    expected: ${expected}`,
-    diff && `        diff: ${diff}`
+    diff && `        diff: ${indentAllButFirstLine(diff)}`
   ]
     .filter(i => i)
     .join('\n');

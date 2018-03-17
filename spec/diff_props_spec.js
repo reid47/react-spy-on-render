@@ -189,7 +189,7 @@ describe('diffProps', () => {
           "      actual: [1, 2, 'test', 4]",
           "    expected: [1, 2, 'test']",
           '        diff: Expected $.length = 4 to equal 3.',
-          '                  Expected $[3] = 4 to equal undefined.'
+          '              Expected $[3] = 4 to equal undefined.'
         ].join('\n')
       );
     });
@@ -219,13 +219,13 @@ describe('diffProps', () => {
           '      actual: {"a":1,"b":"test","c":{"d":false,"e":9}}',
           '    expected: {"a":1,"b":"test","c":{"d":true,"e":8}}',
           '        diff: Expected $.c.d = false to equal true.',
-          '                  Expected $.c.e = 9 to equal 8.'
+          '              Expected $.c.e = 9 to equal 8.'
         ].join('\n')
       );
     });
   });
 
-  fdescribe('when circular object props are different', () => {
+  describe('when circular object props are different', () => {
     beforeEach(() => {
       const circularA = {};
       circularA.self = circularA;
@@ -291,11 +291,11 @@ describe('diffProps', () => {
           '',
           '  funcProp2:',
           '      actual: function func3() {',
-          "                          return console.log('nice');",
-          '                        }',
+          "                      return console.log('nice');",
+          '                    }',
           '    expected: function func2() {',
-          '                          return null;',
-          '                        }',
+          '                      return null;',
+          '                    }',
           '        diff: Expected Function to equal Function.'
         ].join('\n')
       );
@@ -328,11 +328,11 @@ describe('diffProps', () => {
           '',
           '  jsxPropDiff1:',
           '      actual: <span className="two B">',
-          '                    test',
-          '                  </span>',
+          '                test',
+          '              </span>',
           '    expected: <span className="two A">',
-          '                    test',
-          '                  </span>',
+          '                test',
+          '              </span>',
           "        diff: Expected $.props.className = 'two B' to equal 'two A'.",
           '',
           '  jsxPropDiff2:',
