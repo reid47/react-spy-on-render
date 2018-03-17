@@ -47,10 +47,7 @@ gulp.task('build-js', function() {
             { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }
           ]
         },
-        output: { filename: 'index.js' },
-        externals: {
-          react: 'react'
-        }
+        output: { filename: 'index.js' }
       })
     )
     .pipe(gulp.dest('dist/'));
