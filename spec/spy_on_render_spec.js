@@ -30,10 +30,13 @@ describe('spyOnRender', () => {
 
   beforeEach(() => {
     Component = class Component extends React.Component {
+      state = {};
+
       componentDidMount() {
         if (!this.theThing) {
           throw new Error('should not call lifecycle methods');
         }
+        this.setState({componentDidMount: true});
       }
 
       render() {
@@ -55,14 +58,20 @@ describe('spyOnRender', () => {
   });
 
   describe('spying with callThrough and then rendering', () => {
+    let subject;
+
     beforeEach(() => {
       spyOnRender(Component).and.callThrough();
-      ReactDOM.render(<Component />, root);
+      subject = ReactDOM.render(<Component />, root);
     });
 
     it('renders the component children', () => {
       const el = document.getElementById('root');
       expect(el.innerText).toBe('HOO BOY');
+    });
+
+    it('calls componentDidMount', () => {
+      expect(subject.state.componentDidMount).toBe(true);
     });
   });
 

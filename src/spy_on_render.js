@@ -64,7 +64,19 @@ module.exports = {
       }
     });
 
-    return spyOn(componentClass.prototype, 'render').and.returnValue(null);
+    const spy = spyOn(componentClass.prototype, 'render').and.returnValue(null);
+
+    const callThrough = spy.and.callThrough.bind(spy.and);
+    spy.and.callThrough = () => {
+      REACT_LIFECYCLE_METHODS.forEach(methodName => {
+        if (componentClass.prototype[methodName]) {
+          componentClass.prototype[methodName].and.callThrough();
+        }
+      });
+      callThrough();
+    };
+
+    return spy;
   },
   customMatchers: {
     toHaveBeenRenderedWithProps: createMatcher(actual =>
