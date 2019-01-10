@@ -2,6 +2,14 @@ const React = require('react');
 const toJSXString = require('react-element-to-jsx-string').default;
 const NOT_GIVEN = '(prop not given)';
 
+const isAsymmetricMatcher = obj => obj
+  && typeof obj.asymmetricMatch === 'function'
+  && typeof obj.jasmineToString === 'function';
+
+const isObjectContaining = obj => obj
+  && typeof obj.asymmetricMatch === 'function'
+  && obj.constructor.name === 'ObjectContaining';
+
 const indentAllButFirstLine = str =>
   str
     .split('\n')
@@ -9,19 +17,29 @@ const indentAllButFirstLine = str =>
     .join('\n');
 
 const formatValue = value => {
-  if (typeof value === 'string') return `'${value}'`;
+  if (isAsymmetricMatcher(value)) {
+    return value.jasmineToString();
+  }
 
-  if (typeof value !== 'object' || value == null)
+  if (typeof value === 'string') {
+    return `'${value}'`;
+  }
+
+  if (typeof value !== 'object' || value == null) {
     return indentAllButFirstLine(`${value}`);
+  }
 
-  if (Array.isArray(value)) return `[${value.map(formatValue).join(', ')}]`;
+  if (Array.isArray(value)) {
+    return `[${value.map(formatValue).join(', ')}]`;
+  }
 
-  if (React.isValidElement(value))
+  if (React.isValidElement(value)) {
     return indentAllButFirstLine(
       toJSXString(value, {
         functionValue: fn => '<Function>'
       })
     );
+  }
 
   try {
     return JSON.stringify(value);
@@ -66,7 +84,17 @@ const formatActualExpected = (prop, actual, expected, diff, actualOnly) => {
 };
 
 const compare = (equals, index, isMostRecent, actualOnly, expected, actual) => {
-  const details = Object.keys({ ...expected, ...actual })
+  const objectContaining = isObjectContaining(expected);
+
+  if (objectContaining) {
+    expected = expected.sample;
+  }
+
+  const relevantProps = objectContaining
+    ? expected
+    : { ...expected, ...actual };
+
+  const details = Object.keys(relevantProps)
     .sort()
     .map(prop => {
       if (actualOnly) {
@@ -85,6 +113,7 @@ const compare = (equals, index, isMostRecent, actualOnly, expected, actual) => {
       }
 
       const { equal, diffBuilder } = equals(actual[prop], expected[prop]);
+
       if (!equal) {
         return formatMismatchedProp(
           prop,

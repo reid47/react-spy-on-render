@@ -425,4 +425,66 @@ describe('diffProps', () => {
       );
     });
   });
+
+  describe('when expecting jasmine.objectContaining', () => {
+    beforeEach(() => {
+      expected = jasmine.objectContaining({
+        not: 'here'
+      });
+
+      actual = [
+        {
+          hello: 'world',
+          other: 'thing'
+        }
+      ];
+
+      result = diffProps(equals, expected, actual);
+    });
+
+    it('diffs only the props in the sample object', () => {
+      expect(result).toBe(
+        [
+          'on render 1 (most recent):',
+          '',
+          '  not:',
+          '      actual: (prop not given)',
+          "    expected: 'here'"
+        ].join('\n')
+      );
+    });
+
+    describe('when one prop is a jasmine.objectContaining', () => {
+      beforeEach(() => {
+        expected = {
+          fancyProp: jasmine.objectContaining({
+            some: 'thing'
+          })
+        };
+
+        actual = [
+          {
+            fancyProp: {
+              not: 'this'
+            }
+          }
+        ];
+
+        result = diffProps(equals, expected, actual);
+      });
+
+      it('diffs only the props in the sample object', () => {
+        expect(result).toBe(
+          [
+            'on render 1 (most recent):',
+            '',
+            '  fancyProp:',
+            '      actual: {"not":"this"}',
+            "    expected: <jasmine.objectContaining(Object({ some: 'thing' }))>",
+            "        diff: Expected Object({ not: 'this' }) to equal <jasmine.objectContaining(Object({ some: 'thing' }))>."
+          ].join('\n')
+        );
+      });
+    });
+  });
 });
